@@ -41,23 +41,22 @@
                                 <tr>
                                     <th>ลำดับ</th>
                                     <th>รหัสนักศึกษา</th>
-                                    <th>ชื่อ-สกุล</th>
-                                    <th colspan="2">สาขาวิชา</th>
+                                    <th >ชื่อ-สกุล</th>
+                                    <th colspan="4">สาขาวิชา</th>
                                 </tr>
                             </thead>
                             <tbody>
                     <?php
                         include 'connectdb.php';                        
-                        $sql =  'SELECT * FROM studentv2_detail order by std_id';
+                        $sql =  'SELECT * FROM studentv2_detaill order by std_id';
                         $result = mysqli_query($conn,$sql);
                         while (($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) != NULL) {
                             echo '<tr>';
                             echo '<td>' . $row['std_id'] . '</td>';
                             echo '<td>' . $row['std_sid'] . '</td>';
-                            echo '<td>' . $row['ttl_name'] .' ' 
-                            .$row['std_fname']
+                            echo '<td>' . $row['ttl_name'] .' '.$row['std_fname']
                                     .' '.$row['std_lname'].'</td>';
-                            echo '<td>' . $row['prg_name'] .'</td>'; 
+                            echo '<td>' . $row['prg_name'] . '</td>';
                             echo '<td>';
                             ?>
                                 <a href="student_edit.php?std_id=<?php echo $row['std_id'];?>" class="btn btn-warning">แก้ไข</a>

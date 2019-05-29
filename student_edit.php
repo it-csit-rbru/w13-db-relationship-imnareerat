@@ -39,33 +39,35 @@
                         $std_id = $_REQUEST['std_id'];
                         if(isset($_GET['submit'])){
                             $std_id = $_GET['std_id'];
+                            $std_sid = $_GET['std_sid'];
                             $std_ttl_id = $_GET['std_ttl_id'];
-                           
-                          
                             $std_fname = $_GET['std_fname'];
                             $std_lname = $_GET['std_lname'];
+                            $std_prg_id = $_GET['std_prg_id'];
                             $sql = "update student set ";
-                            $sql .= "std_fname='$std_fname',std_lname='$std_lname',std_ttl_id='$std_ttl_id' ";
+                            $sql .= "std_sid='$std_sid',std_ttl_id='$std_ttl_id',std_fname='$std_fname',std_lname='$std_lname',std_prg_id='$std_prg_id' ";
                             $sql .="where std_id='$std_id' ";
                             include 'connectdb.php';
                             mysqli_query($conn,$sql);
                             mysqli_close($conn);
-                            echo "แก้ไขข้อมูลนักศึกษา $std_fname $std_lname เรียบร้อยแล้ว<br>";
+                            echo "แก้ไขข้อมูลนักศึกษา $std_sid $std_fname $std_lname เรียบร้อยแล้ว<br>";
                             echo '<a href="student_list.php">แสดงรายชื่อนักศึกษาทั้งหมด</a>';
                         }else{
                     ?>
                     <form class="form-horizontal" role="form" name="student_edit" action="<?php echo $_SERVER['PHP_SELF'];?>">
                         <div class="form-group">
                             <input type="hidden" name="std_id" id="std_id" value="<?php echo "$std_id";?>">
-                          
                             <label for="std_ttl_id" class="col-md-2 col-lg-2 control-label">คำนำหน้าชื่อ</label>
+                           
                             <div class="col-md-10 col-lg-10">
-                                <select name="std_ttl_id" id="std_ttl_id" class="form-control">
+                            <select name="std_ttl_id" id="std_ttl_id" class="form-control">
+                            
                                 <?php
                                     include 'connectdb.php';
                                     $sql2 = "select * from student where std_id='$std_id'";
                                     $result2 = mysqli_query($conn,$sql2);
                                     $row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC);
+                                    $fstd_sid = $row2['std_sid'];
                                     $fstd_fname = $row2['std_fname'];
                                     $fstd_lname = $row2['std_lname'];
                                     $fstd_ttl_id = $row2['std_ttl_id'];
@@ -81,12 +83,21 @@
                                         echo $row['ttl_name'];
                                         echo '</option>';
                                     }
+                                   
                                     mysqli_free_result($result);
                                     mysqli_close($conn);
                                 ?>
-                                </select>
+                            </select>
                            </div>    
                         </div>
+                        <div class="form-group">
+                            <label for="std_sid" class="col-md-2 col-lg-2 control-label">รหัส</label>
+                            <div class="col-md-10 col-lg-10">
+                                <input type="text" name="std_sid" id="std_sid" class="form-control" 
+                                       value="<?php echo $fstd_sid;?>">
+                            </div> 
+                        </div>
+
                         <div class="form-group">
                             <label for="std_fname" class="col-md-2 col-lg-2 control-label">ชื่อ</label>
                             <div class="col-md-10 col-lg-10">
@@ -101,6 +112,34 @@
                                        value="<?php echo $fstd_lname;?>">
                             </div>    
                         </div> 
+                        <label for="std_prg_id" class="col-md-2 col-lg-2 control-label">สาขาวิชา</label>
+
+                        <div class="col-md-10 col-lg-10">
+                        <select name="std_prg_id" id="std_prg_id" class="form-control">
+                        <?php
+                        include 'connectdb.php';
+                        $sql2 = "select * from student where std_id='$std_id'";
+                        $result2 = mysqli_query($conn,$sql2);
+                        $row2 = mysqli_fetch_array($result2,MYSQLI_ASSOC);
+                        $fstd_prg_id = $row2['std_prg_id'];
+                                    $sql =  "SELECT * FROM program order by prg_id";
+                                    $result = mysqli_query($conn,$sql);
+                                    while (($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) != NULL) {
+                                        echo '<option value=';
+                                        echo '"' . $row['prg_id'].'"';
+                                        if($row['prg_id']==$fstd_prg_id){
+                                            echo ' selected="selected" ';
+                                        }
+                                        echo ">";
+                                        echo $row['prg_name'];
+                                        echo '</option>';
+                                    }
+                                        mysqli_free_result($result);
+                                        mysqli_close($conn);
+                        ?>
+                        </select>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-md-10 col-lg-10">
                                 <input type="submit" name="submit" value="ตกลง" class="btn btn-default">
